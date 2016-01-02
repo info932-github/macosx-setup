@@ -1,0 +1,16 @@
+[user]
+	name = Jeff Wise
+	email = jwise@jlwcorp.net
+[core]
+	excludesfile = /Users/jwise/.gitignore_global
+	editor = subl -w
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[alias]
+	co = checkout
+[url "https://"]
+	insteadOf = git://
