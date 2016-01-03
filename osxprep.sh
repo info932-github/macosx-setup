@@ -18,3 +18,44 @@ echo "------------------------------"
 echo "Installing Xcode Command Line Tools."
 # Install Xcode command line tools
 xcode-select --install
+
+#install Xcode from thumb drive
+#!/bin/bash
+DOWNLOAD_BASE_URL=smb://localhost/Shared Folders/Home/Downloads/
+
+## Figure out OSX version (source: https://www.opscode.com/chef/install.sh)
+function detect_platform_version() {
+# Matching the tab-space with sed is error-prone
+platform_version=$(sw_vers | awk '/^ProductVersion:/ { print $2 }')
+
+major_version=$(echo $platform_version | cut -d. -f1,2)
+
+# x86_64 Apple hardware often runs 32-bit kernels (see OHAI-63)
+x86_64=$(sysctl -n hw.optional.x86_64)
+if [ $x86_64 -eq 1 ]; then
+machine="x86_64"
+fi
+}
+
+detect_platform_version
+
+# Determine which XCode version to use based on platform version
+case $platform_version in
+"10.11") XCODE_DMG='Xcode_7.2.dmg' ;;
+"10.10") XCODE_DMG='XCode-6.1.1-6A2008a.dmg' ;;
+"10.9")  XCODE_DMG='XCode-5.0.2-5A3005.dmg'  ;;
+*)       XCODE_DMG='XCode-5.0.1-5A2053.dmg'  ;;
+esac
+
+# Bootstrap XCode from dmg
+if [ ! -d "/Applications/Xcode.app" ]; then
+echo "INFO: XCode.app not found. Installing XCode..."
+if [ ! -e "$XCODE_DMG" ]; then
+curl -L -O "${DOWNLOAD_BASE_URL}/${XCODE_DMG}"
+fi
+
+hdiutil attach "$XCODE_DMG"
+export __CFPREFERENCES_AVOID_DAEMON=1
+sudo installer -pkg '/Volumes/XCode/XCode.pkg' -target /
+hdiutil detach '/Volumes/XCode'
+fi
