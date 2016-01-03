@@ -64,7 +64,7 @@ brew link libxslt --force
 
 # Install Cask
 brew install caskroom/cask/brew-cask
-
+brew tap caskroom/versions
 # Install Python
 brew install python
 brew install python3
@@ -75,14 +75,13 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
 echo 'eval "$(rbenv init -)"' >> ~/.bash_profile 
 rbenv install 2.2.4
 
+# install java
+brew cask install java
 # Install GO
 brew cask install go
 
-
-
 # Core casks
 brew cask install --appdir="~/Applications" iterm2
-brew cask install --appdir="~/Applications" java
 brew cask install --appdir="~/Applications" xquartz
 
 # Development tool casks
@@ -96,7 +95,6 @@ brew cask install --appdir="/Applications" visual-studio-code
 brew cask install --appdir="/Applications" sourcetree
 brew cask install --appdir="/Applications" appcode
 brew cask install --appdir="/Applications" charles
-brew cask install --appdir="/Applications" cLion
 brew cask install --appdir="/Applications" filezilla
 brew cask install --appdir="/Applications" intellij-idea
 brew cask install --appdir="/Applications" rubymine
