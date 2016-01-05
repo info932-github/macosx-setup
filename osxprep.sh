@@ -21,7 +21,7 @@ xcode-select --install
 
 #install Xcode from thumb drive
 #!/bin/bash
-DOWNLOAD_BASE_URL=smb://localhost/Shared Folders/Home/Downloads/
+DOWNLOAD_BASE_URL=http://somplace/
 
 ## Figure out OSX version (source: https://www.opscode.com/chef/install.sh)
 function detect_platform_version() {
@@ -38,10 +38,10 @@ fi
 }
 
 detect_platform_version
-
+echo $platform_version
 # Determine which XCode version to use based on platform version
 case $platform_version in
-"10.11") XCODE_DMG='Xcode_7.2.dmg' ;;
+"10.11.2") XCODE_DMG='XCode_7.2.dmg' ;;
 "10.10") XCODE_DMG='XCode-6.1.1-6A2008a.dmg' ;;
 "10.9")  XCODE_DMG='XCode-5.0.2-5A3005.dmg'  ;;
 *)       XCODE_DMG='XCode-5.0.1-5A2053.dmg'  ;;
@@ -51,11 +51,13 @@ esac
 if [ ! -d "/Applications/Xcode.app" ]; then
 echo "INFO: XCode.app not found. Installing XCode..."
 if [ ! -e "$XCODE_DMG" ]; then
-curl -L -O "${DOWNLOAD_BASE_URL}/${XCODE_DMG}"
+#assuming that xcode is on a volume
+rsync -—progress /Volumes/SharedFolders/Home/Downloads/${XCODE_DMG} ./${XCODE_DMG}
+#curl -L -O "${DOWNLOAD_BASE_URL}/${XCODE_DMG}"
 fi
 
 hdiutil attach "$XCODE_DMG"
 export __CFPREFERENCES_AVOID_DAEMON=1
-sudo installer -pkg '/Volumes/XCode/XCode.pkg' -target /
+cp -R /Volumes/Xcode/Xcode.app /Applications
 hdiutil detach '/Volumes/XCode'
 fi
